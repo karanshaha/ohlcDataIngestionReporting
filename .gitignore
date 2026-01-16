@@ -1,1 +1,5 @@
-./.idea
+# IntelliJ IDEA / GoLand
+.idea/
+*.iml
+*.iws
+*.ipr
