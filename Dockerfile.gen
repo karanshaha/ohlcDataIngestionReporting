@@ -1,0 +1,7 @@
+FROM golang:1.22-alpine
+
+WORKDIR /app
+COPY generate_csv.go .
+RUN go build -o /bin/csv-gen generate_csv.go
+
+CMD ["/bin/csv-gen"]

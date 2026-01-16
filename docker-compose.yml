@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ohlc
+      POSTGRES_PASSWORD: ohlc
+      POSTGRES_DB: ohlc
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_DSN: postgres://ohlc:ohlc@db:5432/ohlc?sslmode=disable
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app:cached
+  # ← NEW: CSV generator service
+  csv-gen:
+    build:
+      context: .
+      dockerfile: Dockerfile.gen
+    volumes:
+      - ./test_data:/app/test_data
+    depends_on:
+      - db
+
+# ← ADD THIS BLOCK (exact indentation!)
+volumes:
+  db_data:        # defines the volume referenced above
