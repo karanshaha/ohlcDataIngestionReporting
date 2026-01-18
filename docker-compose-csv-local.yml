@@ -6,4 +6,4 @@ services:
     volumes:
       - ./test_data:/app/test_data
     environment:
-      NUM_ROWS: "100"  # Generate 50k rows
+      NUM_ROWS: "100"

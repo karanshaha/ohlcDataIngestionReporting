@@ -67,9 +67,8 @@ docker compose down
 ````
 
 ## Directly pull the image and run the service published on Docker hub
-````
 Docker hub : https://hub.docker.com/r/karansshaha/ohlcdataingestionreporting-api
-````
+
 
 ## 3. Run only the API container (if DB is external)
 ````
@@ -137,6 +136,7 @@ https://github.com/karanshaha/ohlcDataIngestionReporting/blob/master/generate_cs
 
 
 ## Run using docker compose or command 
+Github link : https://github.com/karanshaha/ohlcDataIngestionReporting/blob/master/docker-compose-csv-remote.yml
 ````
  docker compose -f docker-compose-csv-remote.yml run --rm -e NUM_ROWS=200 csv-gen
  
@@ -150,6 +150,8 @@ https://github.com/karanshaha/ohlcDataIngestionReporting/blob/master/generate_cs
   karansshaha/ohlcdataingestionreporting-csv-gen:v1.0.0
 
 ````
+Docker hub : https://hub.docker.com/r/karansshaha/ohlcdataingestionreporting-csv-gen
+
 ## Assumptions
 1. Currently, allowing duplicate rows to be ingested 
 2. Based on business requirement, we can add a unique constraint on symbol or data. 
