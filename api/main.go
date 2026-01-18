@@ -33,7 +33,8 @@ func main() {
 
 	// Repo + Router
 	repo := ohlc.NewRepository(db)
-	router := chttp.SetupRouter(repo)
+	handlers := chttp.NewHandlers(repo)
+	router := chttp.SetupRouter(handlers)
 
 	// Graceful shutdown
 	srv := &http.Server{

@@ -47,7 +47,11 @@ func TestUploadData_ValidCSV(t *testing.T) {
 		return len(recs) > 0
 	})).Return(nil)
 
-	h := &ohttp.Handlers{Repo: mockRepo}
+	h := &ohttp.Handlers{
+		Repo:        mockRepo,
+		BatchSize:   100, // small for test (1 batch)
+		WorkerCount: 1,   // single worker for test
+	}
 	req := httptest.NewRequest(http.MethodPost, "/data", body)
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 	rr := httptest.NewRecorder()
@@ -76,7 +80,11 @@ func TestUploadData_ValidationError(t *testing.T) {
 		return len(recs) > 0
 	})).Return(nil)
 
-	h := &ohttp.Handlers{Repo: mockRepo}
+	h := &ohttp.Handlers{
+		Repo:        mockRepo,
+		BatchSize:   100, // small for test (1 batch)
+		WorkerCount: 1,   // single worker for test
+	}
 	req := httptest.NewRequest(http.MethodPost, "/data", body)
 	req.Header.Set("Content-Type", writer.FormDataContentType())
 	rr := httptest.NewRecorder()

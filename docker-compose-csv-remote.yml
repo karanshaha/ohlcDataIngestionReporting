@@ -1,0 +1,10 @@
+services:
+  csv-gen:
+    image: karansshaha/ohlcdataingestionreporting-csv-gen:v1.0.0
+    volumes:
+      - ./test_data:/app/test_data
+    environment:
+      - NUM_ROWS=${NUM_ROWS:-10000}  # Default 10k
+    # Remove 'build:' section completely
+
+  # ... api, db unchanged

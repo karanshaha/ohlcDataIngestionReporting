@@ -3,5 +3,6 @@ FROM golang:1.22-alpine
 WORKDIR /app
 COPY generate_csv.go .
 RUN go build -o /bin/csv-gen generate_csv.go
+RUN echo "Listing /app/test_data:" && ls -la /app/test_data || echo "no test_data yet"
 
 CMD ["/bin/csv-gen"]

@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -17,8 +18,14 @@ func main() {
 		panic(err)
 	}
 
+	numRowsStr := os.Getenv("NUM_ROWS")
+	numRows, err := strconv.Atoi(strings.TrimSpace(numRowsStr))
+	if err != nil || numRows <= 0 {
+		numRows = 10000 // Default
+	}
+
 	// Generate 10,000 rows of BTCUSDT + ETHUSDT data
-	generateOHLC("/app/test_data/test_ohlc.csv", 10)
+	generateOHLC("/app/test_data/test_ohlc.csv", numRows)
 	fmt.Println("Generated test_ohlc.csv")
 }
 

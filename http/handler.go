@@ -7,14 +7,20 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"ohlcDataIngestionReporting/ohlc"
+	"os"
 	"strconv"
 	"sync"
 )
 
 type Handlers struct {
 	Repo ohlc.Repository
+
+	// Configurable via env
+	BatchSize   int
+	WorkerCount int
 }
 
 func writeJSON(w http.ResponseWriter, status int, v any) {
@@ -34,6 +40,28 @@ func validateHeader(row []string) bool {
 		}
 	}
 	return true
+}
+
+func NewHandlers(repo ohlc.Repository) *Handlers {
+	batchSize := 5000
+	if v := os.Getenv("INGEST_BATCH_SIZE"); v != "" {
+		if parsed, err := strconv.Atoi(v); err == nil && parsed > 0 {
+			batchSize = parsed
+		}
+	}
+
+	workerCount := 4
+	if v := os.Getenv("INGEST_WORKERS"); v != "" {
+		if parsed, err := strconv.Atoi(v); err == nil && parsed > 0 {
+			workerCount = parsed
+		}
+	}
+
+	return &Handlers{
+		Repo:        repo,
+		BatchSize:   batchSize,
+		WorkerCount: workerCount,
+	}
 }
 
 // @Summary Upload CSV data
@@ -63,11 +91,13 @@ func (h *Handlers) UploadData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	recordsCh := make(chan ohlc.Record, 10000)
+	recordsCh := make(chan ohlc.Record, h.WorkerCount*10)
 	errCh := make(chan error, 1)
 
-	const workerCount = 4
-	const batchSize = 5000
+	workerCount := h.WorkerCount
+	log.Printf("workerCount %v", workerCount)
+	batchSize := h.BatchSize
+	log.Printf("batchSize %v", batchSize)
 
 	var wg sync.WaitGroup
 	wg.Add(workerCount)

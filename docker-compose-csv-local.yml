@@ -1,0 +1,9 @@
+services:
+  csv-gen:
+    build:
+      context: .
+      dockerfile: Dockerfile.gen  # Your csv generator Dockerfile
+    volumes:
+      - ./test_data:/app/test_data
+    environment:
+      NUM_ROWS: "100"  # Generate 50k rows
